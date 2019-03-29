@@ -9,6 +9,7 @@ android:
   - tools
   - platform-tools
   - build-tools-27.0.3
+  - build-tools-28.0.3
   - android-27
   - android-28
 jdk: oraclejdk8
@@ -23,17 +24,11 @@ addons:
     - fonts-droid
 install:
 - git clone https://github.com/flutter/flutter.git -b stable --depth 1
-- "./flutter/bin/flutter doctor"
+- export PATH=$PATH:./flutter/bin
+- flutter doctor
 cache:
   directories:
   - "$HOME/.pub-cache"
-
-# before_deploy:
-# Set up git user name and tag this commit
-# - git config --local user.name "stefanJi"
-# - git config --local user.email "408776303@qq.com"
-# - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-# - git tag $TRAVIS_TAG
 
 stages:
   - check
