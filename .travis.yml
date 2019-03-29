@@ -1,9 +1,9 @@
 os: linux
 language: android
 licenses:
-- android-sdk-preview-license-.+
-- android-sdk-license-.+
-- google-gdk-license-.+
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
 android:
   components:
   - tools
@@ -38,7 +38,7 @@ cache:
 stages:
   - check
   - test
-  - depoly
+  - name: depoly
     if: tag =~ /^release-v\d+\.\d+\.\d+/ # tag match: release-v1.0.0
 
 jobs:
