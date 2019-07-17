@@ -39,6 +39,9 @@
 
 - **App**
   - [x] Login by Personal Access Token
+  - [ ] Login by User,Password.
+  - [ ] Signup
+  - [ ] mobile use of stype
   - [x] Projects
   - [x] Themes mode
   - [ ] Markdown and code highlighting support
@@ -60,12 +63,17 @@
   - [x] Filter Merge Requests State. (opened, closed, locked, merged)
   - [x] Filter Merge Requests Assign. (all, assigned_to_me)
   - [x] Discussion of merge request
+  - [ ] create issue
 - **Organisations**
     - [x] Feeds
     - [x] Repos
 - **PipeLines**
     - [x] List project's pipepine
     - [x] Play, Retry, Cancel Pipeline Job
+- **Todo**
+    - [ ] Filtter by Project,Author,Type,Action
+    - [ ] Tabview Todo,Done
+    - [ ] Order By
 
 </details>
 

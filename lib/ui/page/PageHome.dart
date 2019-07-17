@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class HomeState extends State<HomePage> {
   User user;
+  var _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool isLoading = false;
 
   @override
@@ -36,7 +37,7 @@ class HomeState extends State<HomePage> {
     });
 
     if (err != null) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text(err),
         duration: Duration(seconds: 5),
       ));
@@ -60,57 +61,61 @@ class HomeState extends State<HomePage> {
 
   _buildConfigView() {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text(APP_NAME),
           backgroundColor: Theme.of(context).primaryColor,
           elevation: 0,
         ),
-        body: Container(
-          color: Theme.of(context).primaryColor,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 100),
-                  child: Text(
-                    "Welcome!",
-                    style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 36,
-                        shadows: [
-                          Shadow(
-                              offset: Offset(0, 5),
-                              color: Theme.of(context).accentColor,
-                              blurRadius: 20)
-                        ]),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 100),
-                  child: Column(children: <Widget>[
-                    Text("👇", style: TextStyle(fontSize: 50)),
-                    OutlineButton(
-                      onPressed: () {
-                        _navigateToConfig(context);
-                      },
-                      child: Text("Config Access_Token & Host"),
+        body: Builder(builder: (BuildContext context){
+          return Container(
+            color: Theme.of(context).primaryColor,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 100),
+                    child: Text(
+                      "Welcome!",
+                      style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 36,
+                          shadows: [
+                            Shadow(
+                                offset: Offset(0, 5),
+                                color: Theme.of(context).accentColor,
+                                blurRadius: 20)
+                          ]),
                     ),
-                  ]),
-                )
-              ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 100),
+                    child: Column(children: <Widget>[
+                      Text("👇", style: TextStyle(fontSize: 50)),
+                      OutlineButton(
+                        onPressed: () {
+                          _navigateToConfig(context);
+                        },
+                        child: Text("Config Access_Token & Host"),
+                      ),
+                    ]),
+                  )
+                ],
+              ),
             ),
-          ),
-        ));
+          );
+        })
+      );
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? Scaffold(body: Center(child: CircularProgressIndicator()))
+        ? Scaffold(key:_scaffoldKey, body: Center(child: CircularProgressIndicator()))
         : user == null
             ? _buildConfigView()
             : HomeNav(user, _tokenChanger, widget.themeChanger, widget.isDark);
