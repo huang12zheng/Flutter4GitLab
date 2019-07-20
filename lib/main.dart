@@ -1,9 +1,11 @@
 import 'package:F4Lab/const.dart';
-import 'package:F4Lab/ui/page/PageConfig.dart';
 import 'package:F4Lab/ui/page/PageHome.dart';
+import 'package:F4Lab/ui/page/passport/PagePassport.dart';
+import 'package:F4Lab/ui/page/HostConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry/sentry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 ThemeData themeDark = ThemeData(
     primaryColor: Colors.black,
@@ -58,7 +60,8 @@ class MyAppState extends State<MyApp> {
       theme: themeData,
       routes: {
         '/': (context) => HomePage(widget.isDark, themeChanger),
-        '/config': (context) => ConfigPage()
+        '/config': (context) => HostPage(),
+        '/passport': (context) => PagePassport()
       },
     );
   }

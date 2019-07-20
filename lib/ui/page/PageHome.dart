@@ -1,6 +1,7 @@
 import 'package:F4Lab/const.dart';
 import 'package:F4Lab/model/user.dart';
 import 'package:F4Lab/ui/logic_widget/home_nav.dart';
+import 'package:F4Lab/ui/util/index.dart';
 import 'package:F4Lab/user_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -45,13 +46,12 @@ class HomeState extends State<HomePage> {
   }
 
   _navigateToConfig(BuildContext c) async {
-    final success = await Navigator.pushNamed(context, '/config');
-    if (success != null && success == 0) {
-      _loadToken();
-    } else {
-      print("cancel config");
-    }
+    final result = await Navigator.pushNamed(context, '/config');
+    if (isSuccess(result)) _loadToken();
+    else print("cancel host config");
   }
+
+  
 
   _tokenChanger(bool change) {
     if (change) {
@@ -100,7 +100,7 @@ class HomeState extends State<HomePage> {
                         onPressed: () {
                           _navigateToConfig(context);
                         },
-                        child: Text("Config Access_Token & Host"),
+                        child: Text("Config Host"),
                       ),
                     ]),
                   )

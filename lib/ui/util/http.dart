@@ -1,0 +1,1 @@
+bool isSuccess(Object result) => result != null && result == 0;

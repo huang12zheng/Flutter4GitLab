@@ -164,7 +164,7 @@ class _State extends State<HomeNav> {
 
   _navigateToConfig(BuildContext c) async {
     final success = await Navigator.pushNamed(context, '/config');
-    print(success);
+    print("_navigateToConfig#success: $success");
     if (success != null) {
       widget.tokenChanger(true);
     } else {
