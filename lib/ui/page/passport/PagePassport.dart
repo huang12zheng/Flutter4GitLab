@@ -1,14 +1,17 @@
+import 'dart:convert';
+
 import 'package:F4Lab/api.dart';
 import 'package:F4Lab/const.dart';
 import 'package:F4Lab/gitlab_client.dart';
 import 'package:F4Lab/ui/page/passport/token.dart';
+import 'package:F4Lab/ui/util/passport.dart';
 import 'package:F4Lab/ui/util/size.dart';
 import 'package:F4Lab/ui/page/passport/signin.dart';
 import 'package:F4Lab/ui/page/passport/signup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 
 class PagePassport extends StatefulWidget {
 
@@ -46,20 +49,23 @@ class _PagePassportState extends State<PagePassport> with SingleTickerProviderSt
 
   _bodyView(){
     return Scaffold(
-      appBar: TabBar(
-        controller: controller,
-        tabs: <Tab>[
-          Tab(text: "Token"),
-          Tab(text: "Existing"),
-          Tab(text: "New"),
-          // Tab(text: "Config"),
-        ]
+      appBar: AppBar(
+        title: Text('Passport'),
+        bottom: TabBar(
+          controller: controller,
+          tabs: <Tab>[
+            Tab(text: "Token"),
+            Tab(text: "Existing"),
+            Tab(text: "New"),
+            // Tab(text: "Config"),
+          ]
+        ),
       ),
       body: TabBarView(
         controller: controller,
         children: <Widget>[
           TokenPage(onPressed:_test),
-          SigninPage(),
+          SigninPage(onPressed:_signin),
           SignupPage(),
           // ConfigPage()
         ],
@@ -74,19 +80,42 @@ class _PagePassportState extends State<PagePassport> with SingleTickerProviderSt
     final SharedPreferences sp = await SharedPreferences.getInstance();
     _host = sp.getString(KEY_HOST);
     _version = sp.getString(KEY_API_VERSION);
-    GitlabClient.setUpTokenAndHost(_token, _host, _version);
+    GitlabClient.setUpTokenAndHost(privateToken:_token, host: _host,version: _version);
     final resp = await ApiService.getAuthUser();
     if (resp.success && resp.data != null) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Connection Success"),));
       final SharedPreferences sp = await SharedPreferences.getInstance();
-      sp.setString(KEY_ACCESS_TOKEN, _token);
-      sp.setString(KEY_HOST, _host);
-      sp.setString(KEY_API_VERSION, _version ?? DEFAULT_API_VERSION);
+      sp.setString(KEY_PRIVATE_TOKEN, _token);
+      sp.setString(KEY_OAUTH_TOKEN, null);
       Future.delayed(
           Duration(milliseconds: 300), () => Navigator.pop(context, 0));
     } else {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(resp.err ?? "Error"), backgroundColor: Colors.red));
+    }
+  }
+
+  _signin(String access,String verify  ) async{
+    try {
+      // get host
+      final SharedPreferences sp = await SharedPreferences.getInstance();
+      String _host = sp.getString(KEY_HOST);
+      String url = '$_host/oauth/token';
+      // get param
+      Map<String,String> param = getLoginArg(access,verify);    
+      param['grant_type'] = 'password';
+    
+      http.Response response = await http.post(url, body: param);
+      // result test
+      if (response.statusCode!=200) throw Exception(response.body);
+      // set token
+      Map token = json.decode(response.body);
+      sp.setString(KEY_OAUTH_TOKEN, token['access_token']);
+      Future.delayed(
+          Duration(milliseconds: 300), () => Navigator.pop(context, 0));
+    } catch (e) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(e?.message ?? "Error"), backgroundColor: Colors.red));
     }
   }
 }

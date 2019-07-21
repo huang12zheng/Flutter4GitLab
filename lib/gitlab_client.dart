@@ -8,21 +8,24 @@ const USER_AGENT = "F4Lab";
 
 class GitlabClient extends http.BaseClient {
   static String globalHOST;
-  static String globalTOKEN;
+  static String privateTOKEN;
+  static String oauthTOKEN;
   static String apiVersion;
 
   final http.Client _inner = http.Client();
 
   static GitlabClient newInstance() => GitlabClient();
 
-  static setUpTokenAndHost(String token, String host, String version) {
-    globalTOKEN = token;
+  static setUpTokenAndHost({String privateToken,String oauthToken, String host, String version='v4'}) {
+    privateTOKEN = privateToken;
+    oauthTOKEN = oauthToken;
     globalHOST = host;
     apiVersion = version;
   }
 
   Future<http.StreamedResponse> send(http.BaseRequest request) {
-    request.headers['Private-Token'] = globalTOKEN;
+    if (privateTOKEN?.isNotEmpty??false) request.headers['Private-Token'] = privateTOKEN;
+    if (oauthTOKEN?.isNotEmpty??false)   request.headers['Authorization'] = 'Bearer $oauthTOKEN';
     request.headers['User-Agent'] = USER_AGENT;
     return _inner.send(request);
   }
@@ -60,7 +63,9 @@ class GitlabClient extends http.BaseClient {
     dio.options.baseUrl = baseUrl();
     dio.options.connectTimeout = 5000; //5s
     dio.options.receiveTimeout = 5000;
-    dio.options.headers["Private-Token"] = globalTOKEN;
+    if (privateTOKEN?.isNotEmpty??false) dio.options.headers["Private-Token"] = privateTOKEN;
+    if (oauthTOKEN?.isNotEmpty??false) dio.options.headers['Authorization'] = 'Bearer $oauthTOKEN';
+    
     dio.options.headers["User-Agent"] = USER_AGENT;
     dio.options.responseType = ResponseType.json;
     return dio;

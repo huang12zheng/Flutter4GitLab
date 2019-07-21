@@ -1,7 +1,8 @@
 const APP_NAME = 'F4Lab';
 const APP_VERSION = '1.1.1';
 const APP_LEGEND = 'A GitLab Client by Flutter.';
-const KEY_ACCESS_TOKEN = 'key.access.token';
+const KEY_OAUTH_TOKEN = 'key.access.token';
+const KEY_PRIVATE_TOKEN = 'key.private.token';
 const KEY_HOST = 'key.host';
 const KEY_API_VERSION = 'key.api.version';
 const KEY_TAB_INDEX = 'key.tab.index';

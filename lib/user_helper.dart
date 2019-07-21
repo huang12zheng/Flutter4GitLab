@@ -17,14 +17,17 @@ class UserHelper {
 
   static Future<String> initUser() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
-    final token = sp.getString(KEY_ACCESS_TOKEN) ?? null;
+    final private = sp.getString(KEY_PRIVATE_TOKEN) ?? null;
+    final access = sp.getString(KEY_OAUTH_TOKEN) ?? null;
     final host = sp.getString(KEY_HOST) ?? null;
     final v = sp.getString(KEY_API_VERSION) ?? null;
-    if (token == null || host == null || v == null) {
+    if ((private == null&& access==null) || host == null || v == null) {
       setUser(null);
       return "Not found host or toekn or api_version";
     }
-    GitlabClient.setUpTokenAndHost(token, host, v);
+    // if (private!=null) GitlabClient.setUpTokenAndHost(privateToken:private, host: host,version: v);
+    // if (access!=null) GitlabClient.setUpTokenAndHost(oauthToken:access, host: host,version: v);
+    GitlabClient.setUpTokenAndHost(privateToken:private,oauthToken:access, host: host,version: v);
     final resp = await ApiService.getAuthUser();
     final err = resp.err;
     if (resp.success) {

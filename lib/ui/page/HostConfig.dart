@@ -152,8 +152,9 @@ class ConfigState extends State<HostPage> {
 
   _reset() async {
     final sp = await SharedPreferences.getInstance();
-    sp.remove(KEY_HOST);
-    sp.remove(KEY_ACCESS_TOKEN);
-    Navigator.pop(context, -1);
+    // sp.remove(KEY_HOST);
+    sp.remove(KEY_PRIVATE_TOKEN);
+    sp.remove(KEY_OAUTH_TOKEN);
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => route == null);
   }
 }

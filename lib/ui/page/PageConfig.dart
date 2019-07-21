@@ -39,7 +39,7 @@ class ConfigState extends State<ConfigPage> {
                 children: <Widget>[
                   TextField(
                     decoration: InputDecoration(
-                        hintText: _token ?? "Access Token:",
+                        hintText: _token ?? "Private Token:",
                         helperText:
                             "You can create personal access token from your GitLab profile."),
                     textInputAction: TextInputAction.next,
@@ -119,14 +119,14 @@ class ConfigState extends State<ConfigPage> {
       _err = null;
     });
 
-    GitlabClient.setUpTokenAndHost(_token, _host, _version);
+    GitlabClient.setUpTokenAndHost(privateToken:_token, host: _host,version: _version);
     final resp = await ApiService.getAuthUser();
     if (resp.success && resp.data != null) {
       Scaffold.of(rootContext).showSnackBar(
         SnackBar(content: Text("Connection Success")),
       );
       final SharedPreferences sp = await SharedPreferences.getInstance();
-      sp.setString(KEY_ACCESS_TOKEN, _token);
+      sp.setString(KEY_PRIVATE_TOKEN, _token);
       sp.setString(KEY_HOST, _host);
       sp.setString(KEY_API_VERSION, _version ?? DEFAULT_API_VERSION);
       Future.delayed(
@@ -145,7 +145,7 @@ class ConfigState extends State<ConfigPage> {
   _loadConfig() async {
     final SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
-      _token = sp.getString(KEY_ACCESS_TOKEN);
+      _token = sp.getString(KEY_PRIVATE_TOKEN);
       _host = sp.getString(KEY_HOST);
       _version = sp.getString(KEY_API_VERSION) ?? DEFAULT_API_VERSION;
     });
@@ -154,7 +154,8 @@ class ConfigState extends State<ConfigPage> {
   _reset() async {
     final sp = await SharedPreferences.getInstance();
     sp.remove(KEY_HOST);
-    sp.remove(KEY_ACCESS_TOKEN);
-    Navigator.pop(context, -1);
+    sp.remove(KEY_PRIVATE_TOKEN);
+    // Navigator.pop(context, -1);
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => route == null);
   }
 }

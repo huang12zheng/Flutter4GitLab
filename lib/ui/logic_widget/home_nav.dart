@@ -38,6 +38,7 @@ const _tabTitles = {
 };
 
 class _State extends State<HomeNav> {
+  var _scaffoldKey = new GlobalKey<ScaffoldState>();
   int _currentTab = 0;
   String _barTitle;
   bool _isDark;
@@ -59,6 +60,7 @@ class _State extends State<HomeNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("$_barTitle"),
       ),
@@ -163,9 +165,10 @@ class _State extends State<HomeNav> {
   }
 
   _navigateToConfig(BuildContext c) async {
-    final success = await Navigator.pushNamed(context, '/config');
-    print("_navigateToConfig#success: $success");
-    if (success != null) {
+    final result = await Navigator.pushNamed(context, '/config');
+    print("_navigateToConfig#result: $result");
+    // -1 0
+    if (result != null) {
       widget.tokenChanger(true);
     } else {
       print("cancel config");
