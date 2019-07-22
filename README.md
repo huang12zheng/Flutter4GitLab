@@ -41,7 +41,6 @@
   - [x] Login by Personal Access Token
   - [ ] Login by User,Password.
   - [ ] Signup
-  - [ ] mobile use of stype
   - [x] Projects
   - [x] Themes mode
   - [ ] Markdown and code highlighting support
