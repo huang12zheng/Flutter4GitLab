@@ -25,8 +25,6 @@ class UserHelper {
       setUser(null);
       return "Not found host or toekn or api_version";
     }
-    // if (private!=null) GitlabClient.setUpTokenAndHost(privateToken:private, host: host,version: v);
-    // if (access!=null) GitlabClient.setUpTokenAndHost(oauthToken:access, host: host,version: v);
     GitlabClient.setUpTokenAndHost(privateToken:private,oauthToken:access, host: host,version: v);
     final resp = await ApiService.getAuthUser();
     final err = resp.err;

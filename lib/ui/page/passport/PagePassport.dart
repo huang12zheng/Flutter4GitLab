@@ -54,7 +54,7 @@ class _PagePassportState extends State<PagePassport> with SingleTickerProviderSt
         bottom: TabBar(
           controller: controller,
           tabs: <Tab>[
-            Tab(text: "Token"),
+            Tab(text: "Private-Token"),
             Tab(text: "Existing"),
             Tab(text: "New"),
             // Tab(text: "Config"),
@@ -66,7 +66,7 @@ class _PagePassportState extends State<PagePassport> with SingleTickerProviderSt
         children: <Widget>[
           TokenPage(onPressed:_test),
           SigninPage(onPressed:_signin),
-          SignupPage(),
+          SignupPage(onPressed:_signup),
           // ConfigPage()
         ],
       )
@@ -117,5 +117,25 @@ class _PagePassportState extends State<PagePassport> with SingleTickerProviderSt
       _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(e?.message ?? "Error"), backgroundColor: Colors.red));
     }
+  }
+
+  _signup(Map<String,String> userInfo) async{
+    
+    try {
+      // get host
+      final SharedPreferences sp = await SharedPreferences.getInstance();
+      String _host = sp.getString(KEY_HOST);
+      String url = '$_host/api/v4/users?private_token=$KEY_ADMIN_TOKEN';
+      // get param
+      passwordCheck(userInfo);
+      Map<String,String> param = getSignupArg(userInfo);
+    
+      http.Response response = await http.post(url, body: param);
+      if (response.statusCode!=201) { print(response.body); print(response.statusCode); throw Exception(response.body);}
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Please Check In Your Email")));
+    } catch (e) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(e?.message ?? "Error"), backgroundColor: Colors.red));
+    } 
   }
 }

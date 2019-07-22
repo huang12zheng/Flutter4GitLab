@@ -24,14 +24,28 @@ void switchVerify(String verify, Map<String, String> map) {
 
 
 // -----------------------------------Signup-------------------------------
-switchExistPattern({String access,String password,String mobile,String email}){
+switchPostArg({String access,String password,String mobile,String email}){
   if (access == '') throw new Exception('please input account');
   if (password == '') throw new Exception('please input password info');
   if (mobile == '') throw new Exception('please input mobile');
-  List<Map> arg=[
-    {'userName': access},
-    {'mobile': mobile},
-    {'email':  email},
-  ];
+  if (email == '') throw new Exception('please input email');
+  Map<String,String> arg = {
+    "username": access,
+    "password": password,
+    "skype":    mobile,
+    "name":     access,
+    "email":    email
+  };
   return arg;
+}
+getSignupArg(Map<String,String> userInfo){
+  return switchPostArg(
+    access: userInfo['username'],
+    password: userInfo['password'],
+    mobile: userInfo['mobile'],
+    email: userInfo['email']
+  );
+}
+void passwordCheck(Map<String, String> userInfo) {
+  if (userInfo['password']!= userInfo['confirm-password']) throw Exception('please check password');
 }

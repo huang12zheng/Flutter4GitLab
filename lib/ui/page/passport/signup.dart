@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignupPage extends StatefulWidget {
-  final VoidCallback onPressed;
+  final Function onPressed;
   SignupPage({
     Key key,
-    this.onPressed,
+    @required this.onPressed,
   }):super(key:key);
   @override
   _SignupPageState createState() => _SignupPageState();
@@ -30,7 +30,7 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController passwordController = new TextEditingController();
   TextEditingController confirmPasswordController = new TextEditingController();
 
-  VoidCallback onPressed;
+  Function onPressed;
 
   void initState() {
     onPressed = widget.onPressed;
@@ -206,7 +206,6 @@ class _SignupPageState extends State<SignupPage> {
                                 fontFamily: "WorkSansSemiBold", fontSize: 16.0),
                             suffixIcon: GestureDetector(
                               onTap: ()=> setState(()=>{confirmFlag=!confirmFlag }),
-                              // dispatch(SignupActionCreator.toggleConfirm()),
                               child: Icon(
                                 confirmFlag
                                     ? FontAwesomeIcons.eye
@@ -253,7 +252,6 @@ class _SignupPageState extends State<SignupPage> {
                     return MaterialButton(
                       highlightColor: Colors.transparent,
                       splashColor: AppColors.loginGradientEnd,
-                      //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 42.0),
@@ -265,11 +263,9 @@ class _SignupPageState extends State<SignupPage> {
                               fontFamily: "WorkSansBold"),
                         ),
                       ),
-                      onPressed: ()=> onPressed(),
-                      // showInSnackBar("SignUp button pressed")
-                      );
-                  }),
-                // ),
+                      onPressed: ()=> onPressed(userInfo())
+                    );
+                  })
               ),
             ],
           ),
@@ -277,4 +273,22 @@ class _SignupPageState extends State<SignupPage> {
       ),
     );
   }
+
+  // signStragery(){
+  //   confirmCheck();
+  //   onPressed(userInfo());
+  // }
+
+  Map<String, String> userInfo() {
+    var parm = {
+      'username':nameController.text ?? "",
+      'password':passwordController.text ?? "",
+      'confirm-password':confirmPasswordController.text ?? "",
+      'email':emailController.text ?? "",
+      'mobile':mobileController.text ?? "",
+    };
+    return parm;
+  }
+
 }
+
