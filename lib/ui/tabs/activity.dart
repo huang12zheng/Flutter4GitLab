@@ -16,24 +16,38 @@ class TabActivity extends CommListWidget {
 class FeedState extends CommListState<TabActivity> {
   @override
   loadData({nextPage: 1}) async {
-    final url = "dashboard/projects.atom";
-    final client = GitlabClient.newInstance();
-    final data = await client.getRss(url).then((resp) {
-      final data = utf8.decode(resp.bodyBytes);
-      final XmlDocument doc = parse(data);
-      var entries = doc.findAllElements("entry");
-      final feeds = entries.map((ele) {
-        return {
-          'title': ele.findElements("title").single.text,
-          'updated': ele.findElements('updated').single.text,
-          'link': ele.findElements('link').single.getAttribute("href"),
-          'avatar':
-              ele.findElements('media:thumbnail').single.getAttribute('url')
-        };
-      });
-      return feeds.toList();
-    }).whenComplete(client.close);
-    return data;
+    try {
+      final url = "dashboard/projects.atom";
+      final client = GitlabClient.newInstance();
+      final data = await client.getRss(url).then((resp) {
+        final data = utf8.decode(resp.bodyBytes);
+        final XmlDocument doc = parse(data);
+        var entries = doc.findAllElements("entry");
+        final feeds = entries.map((ele) {
+          return {
+            'title': ele.findElements("title").single.text,
+            'updated': ele.findElements('updated').single.text,
+            'link': ele.findElements('link').single.getAttribute("href"),
+            'avatar':
+                ele.findElements('media:thumbnail').single.getAttribute('url')
+          };
+        });
+        return feeds.toList();
+      }).whenComplete(client.close);
+      return data;
+    } on XmlParserException catch (e) {
+      print(e.message);
+      showDialog(
+        context: context,
+        builder: (ctx){
+          return AlertDialog(
+            title: Text('Alert'),
+            content: Text('Please Confirm In Your Email')
+          );
+        }
+      );
+    }
+    
   }
 
   @override

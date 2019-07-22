@@ -132,7 +132,7 @@ class _PagePassportState extends State<PagePassport> with SingleTickerProviderSt
     
       http.Response response = await http.post(url, body: param);
       if (response.statusCode!=201) { print(response.body); print(response.statusCode); throw Exception(response.body);}
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Please Check In Your Email")));
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Please Confirm In Your Email")));
     } catch (e) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(e?.message ?? "Error"), backgroundColor: Colors.red));
